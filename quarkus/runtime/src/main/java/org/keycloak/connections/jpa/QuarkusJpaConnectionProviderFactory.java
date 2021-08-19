@@ -49,6 +49,7 @@ import org.keycloak.Config;
 import org.keycloak.ServerStartupError;
 import org.keycloak.common.Version;
 import org.keycloak.connections.jpa.updater.JpaUpdaterProvider;
+import org.keycloak.connections.jpa.util.JpaUtils;
 import org.keycloak.exportimport.ExportImportManager;
 import org.keycloak.migration.MigrationModelManager;
 import org.keycloak.migration.ModelVersion;
@@ -85,6 +86,8 @@ public final class QuarkusJpaConnectionProviderFactory implements JpaConnectionP
     private EntityManagerFactory emf;
     private Config.Scope config;
     private Map<String, String> operationalInfo;
+    private boolean jtaEnabled;
+    private JtaTransactionManagerLookup jtaLookup;
     private KeycloakSessionFactory factory;
 
     @Override
@@ -112,6 +115,7 @@ public final class QuarkusJpaConnectionProviderFactory implements JpaConnectionP
 
     @Override
     public void postInit(KeycloakSessionFactory factory) {
+        String unitName = "keycloak-default";
         this.factory = factory;
         Instance<EntityManagerFactory> instance = CDI.current().select(EntityManagerFactory.class);
 
@@ -121,7 +125,14 @@ public final class QuarkusJpaConnectionProviderFactory implements JpaConnectionP
 
         emf = instance.get();
 
+        Map<String, Object> properties = emf.getProperties();
         KeycloakSession session = factory.create();
+
+        checkJtaEnabled(factory);
+
+        emf = JpaUtils.createEntityManagerFactory(session, unitName, properties, jtaEnabled);
+        logger.trace("EntityManagerFactory created");
+
         boolean initSchema;
 
         try (Connection connection = getConnection()) {
@@ -379,6 +390,15 @@ public final class QuarkusJpaConnectionProviderFactory implements JpaConnectionP
                 if (!addUserFile.delete()) {
                     ServicesLogger.LOGGER.failedToDeleteFile(addUserFile.getAbsolutePath());
                 }
+            }
+        }
+    }
+
+    protected void checkJtaEnabled(KeycloakSessionFactory factory) {
+        jtaLookup = (JtaTransactionManagerLookup) factory.getProviderFactory(JtaTransactionManagerLookup.class);
+        if (jtaLookup != null) {
+            if (jtaLookup.getTransactionManager() != null) {
+                jtaEnabled = true;
             }
         }
     }
