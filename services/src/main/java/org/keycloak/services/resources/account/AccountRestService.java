@@ -41,10 +41,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 
 import org.jboss.resteasy.annotations.cache.NoCache;
 import org.jboss.resteasy.spi.HttpRequest;
@@ -201,8 +198,20 @@ public class AccountRestService {
 
         event.event(EventType.UPDATE_PROFILE).client(auth.getClient()).user(auth.getUser());
 
+        Map<String, List<String>> attributes = auth.getUser().getAttributes();
+        Map<String, List<String>> newAttributes = rep.toAttributes();
+
+        for (String key : newAttributes.keySet()) {
+            List<String> newValue = newAttributes.get(key);
+            if (newValue == null) {
+                attributes.remove(key);
+            } else {
+                attributes.put(key, newValue);
+            }
+        }
+
         UserProfileProvider profileProvider = session.getProvider(UserProfileProvider.class);
-        UserProfile profile = profileProvider.create(UserProfileContext.ACCOUNT, rep.toAttributes(), auth.getUser());
+        UserProfile profile = profileProvider.create(UserProfileContext.ACCOUNT, attributes, auth.getUser());
 
         try {
 
