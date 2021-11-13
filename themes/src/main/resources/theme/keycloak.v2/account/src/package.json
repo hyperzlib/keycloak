@@ -9,23 +9,26 @@
     "check-types": "tsc --noImplicitAny --strictNullChecks --jsx react -p ./",
     "check-types:watch": "npm run check-types -- -w",
     "lint": "eslint ./app/**/*.ts*",
-    "move-web_modules": "shx mv web_modules ../../../keycloak/common/resources",
+    "move-web_modules": "shx mv web_modules ../resources",
     "copy-pf-resources": "npm run move-app-css && npm run copy-base-css && npm run copy-fonts && npm run copy-pficon",
-    "move-app-css": "shx mkdir -p ../../../keycloak/common/resources/web_modules/@patternfly/react-core/dist/styles && shx mv app.css ../../../keycloak/common/resources/web_modules/@patternfly/react-core/dist/styles",
-    "copy-base-css": "shx mkdir -p ../../../keycloak/common/resources/web_modules/@patternfly/react-core/dist/styles && shx cp node_modules/@patternfly/react-core/dist/styles/base.css ../../../keycloak/common/resources/web_modules/@patternfly/react-core/dist/styles",
-    "copy-fonts": "shx mkdir -p ../../../keycloak/common/resources/web_modules/@patternfly/react-core/dist/styles/assets/fonts/overpass-webfont && shx cp node_modules/@patternfly/react-core/dist/styles/assets/fonts/overpass-webfont/overpass*.woff2 ../../../keycloak/common/resources/web_modules/@patternfly/react-core/dist/styles/assets/fonts/overpass-webfont",
-    "copy-pficon": "shx mkdir -p ../../../keycloak/common/resources/web_modules/@patternfly/react-core/dist/styles/assets/pficon && shx cp node_modules/@patternfly/react-core/dist/styles/assets/pficon/pficon.woff2 ../../../keycloak/common/resources/web_modules/@patternfly/react-core/dist/styles/assets/pficon"
+    "move-app-css": "shx mkdir -p ../resources/web_modules/@patternfly/react-core/dist/styles && shx mv app.css ../resources/web_modules/@patternfly/react-core/dist/styles",
+    "copy-base-css": "shx mkdir -p ../resources/web_modules/@patternfly/react-core/dist/styles && shx cp node_modules/@patternfly/react-core/dist/styles/base.css ../resources/web_modules/@patternfly/react-core/dist/styles",
+    "copy-fonts": "shx mkdir -p ../resources/web_modules/@patternfly/react-core/dist/styles/assets/fonts/overpass-webfont && shx cp node_modules/@patternfly/react-core/dist/styles/assets/fonts/overpass-webfont/overpass*.woff2 ../resources/web_modules/@patternfly/react-core/dist/styles/assets/fonts/overpass-webfont",
+    "copy-pficon": "shx mkdir -p ../resources/web_modules/@patternfly/react-core/dist/styles/assets/pficon && shx cp node_modules/@patternfly/react-core/dist/styles/assets/pficon/pficon.woff2 ../resources/web_modules/@patternfly/react-core/dist/styles/assets/pficon"
   },
   "keywords": [],
   "author": "Stan Silvert",
   "license": "Apache-2.0",
   "dependencies": {
+    "@babel/compat-data": "^7.14.7",
     "@patternfly/react-core": "^3.153.3",
     "@patternfly/react-icons": "^3.15.16",
     "@patternfly/react-styles": "^3.7.14",
+    "chokidar": "^3.5.2",
     "react": "npm:@pika/react@^16.13.1",
     "react-dom": "npm:@pika/react-dom@^16.13.1",
-    "react-router-dom": "^4.3.1"
+    "react-router-dom": "^4.3.1",
+    "react-select": "^4.3.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -38,6 +41,7 @@
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "@types/react-router-dom": "^4.3.1",
+    "@types/react-select": "^4.0.17",
     "@typescript-eslint/eslint-plugin": "^1.4.2",
     "@typescript-eslint/parser": "^1.4.2",
     "babel-eslint": "^9.0.0",

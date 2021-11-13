@@ -16,7 +16,7 @@
     <properties>
         <dir.common>src/main/resources/theme/keycloak/common/resources</dir.common>
         <dir.account2>src/main/resources/theme/keycloak.v2/account/src</dir.account2>
-        <args.npm.install>ci --no-optional --ignore-scripts</args.npm.install>
+        <args.npm.install>i --no-optional --ignore-scripts</args.npm.install>
     </properties>
 
     <build>
@@ -38,14 +38,6 @@
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <executions>
-                    <!-- Download NPM tools -->
-                    <execution>
-                        <id>setup-node</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                    </execution>
                     <!-- Compile stuff -->
                     <execution>
                         <id>compile-account2</id>
@@ -54,6 +46,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
+                            <executable>npm.cmd</executable>
                             <workingDirectory>${dir.account2}</workingDirectory>
                             <arguments>run build --scripts-prepend-node-path</arguments>
                         </configuration>
@@ -66,6 +59,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
+                            <executable>npm.cmd</executable>
                             <workingDirectory>${dir.account2}</workingDirectory>
                             <arguments>${args.npm.install}</arguments>
                         </configuration>
@@ -186,6 +180,7 @@
                                     <goal>npm</goal>
                                 </goals>
                                 <configuration>
+                                    <executable>npm.cmd</executable>
                                     <workingDirectory>${dir.common}</workingDirectory>
                                     <arguments>install -P -E --no-optional --ignore-scripts --no-bin-links --no-shrinkwrap --no-package-lock</arguments>
                                 </configuration>
